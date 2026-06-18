@@ -7,7 +7,7 @@ app.include_router(profiling_router)
 
 @app.get("/")
 async def home():
-    return {"message": "Hello World"}
+    return {"message": "Welcome to Data Lens!"}
 
 
 
