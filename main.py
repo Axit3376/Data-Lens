@@ -10,6 +10,7 @@ from routers.visualization_router import router as visualization_router
 from routers.report_router import router as report_router
 
 app = FastAPI()
+app.mount("/static/plots", StaticFiles(directory="plots"), name="static-plots")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
