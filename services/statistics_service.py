@@ -1,5 +1,6 @@
 import pandas as pd
 from services.quality_service import outlier_detection, get_missing_values
+from utils.analysis_store import update_analysis
 
 
 def descriptive_statistics(df):
@@ -163,10 +164,12 @@ def insight_engine(df):
 
 async def statistics_analysis(file):
     df = pd.read_csv(file.file)
-    return {
+    stats = {
         "descriptive_statistics": descriptive_statistics(df),
         "categorical_analysis": categorical_analysis(df),
         "correlation_analysis": correlation_analysis(df),
         "distribution_analysis": distribution_analysis(df),
         "insights": insight_engine(df)
     }
+    update_analysis("statistics", stats)
+    return stats

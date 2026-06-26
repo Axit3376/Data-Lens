@@ -1,4 +1,5 @@
 import numpy as np
+from utils.analysis_store import update_analysis
 
 def get_missing_values(df):
     missing_count = df.isnull().sum()
@@ -63,10 +64,13 @@ def get_high_cardinality_columns(df):
     return high_cardinality
 
 def analyze_quality(df):
-    return {
+    quality = {
         "missing_values": get_missing_values(df),
         "duplicate_rows": get_duplicate_rows(df),
         "constant_columns": get_constant_columns(df),
         "outlier_detection": outlier_detection(df),
         "high_cardinality": get_high_cardinality_columns(df)
     }
+    update_analysis("quality", quality)
+
+    return quality

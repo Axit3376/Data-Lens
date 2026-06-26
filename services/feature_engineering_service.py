@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from utils.analysis_store import update_analysis
 
 ORDINAL_COLUMNS = {
     "loan_grade",
@@ -199,5 +200,6 @@ def feature_engineering(df, target=None):
     results["highly_correlated"] = correlation_recommendation(df)
     results["class_imbalance"] = class_imbalance_detection(df, target)
 
+    update_analysis("feature_engineering", results)
 
     return results

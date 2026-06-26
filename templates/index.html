@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataLens</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/report.css') }}?v=1.3">
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Theme Toggle at top right of landing screen -->
+        <div class="theme-switch-wrapper" style="align-self: flex-end; margin-bottom: 25px; border-top: none; padding-top: 0; gap: 10px;">
+            <span class="theme-switch-label">Dark Mode</span>
+            <label class="theme-switch" for="theme-toggle">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider-round"></span>
+            </label>
+        </div>
+
+        <!-- Header -->
+        <header class="brand-header">
+            <img src="{{ url_for('static', path='/logo.png') }}" alt="DataLens Logo" class="brand-logo-img">
+            <h1 class="brand-logo">DataLens</h1>
+            <p>Transform raw datasets into actionable insights instantly. Upload your CSV and get automated profiling, statistics, quality analysis, and visualizations.</p>
+        </header>
+
+        <!-- Upload Card -->
+        <div id="upload-section" class="card-upload">
+            <form id="upload-form">
+                <!-- Drag and Drop Area -->
+                <div id="drop-zone" class="drop-zone">
+                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    <div class="upload-prompt">
+                        <h3>Drag & drop your CSV file here</h3>
+                        <p>or click to browse from your device</p>
+                    </div>
+                    <input type="file" id="file-input" name="file" accept=".csv" class="hidden">
+                </div>
+
+                <!-- Form Inputs -->
+                <div class="form-group">
+                    <label for="target-column">Target Column (Optional)</label>
+                    <input type="text" id="target-column" placeholder="e.g., Survived" class="input-control">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Providing a target column generates additional relationship plots and analysis details.</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="analyze-btn" class="btn-primary" disabled>Analyze Dataset</button>
+            </form>
+        </div>
+
+        <!-- Progress/Analysis Timeline -->
+        <div id="progress-section" class="card-upload hidden">
+            <div class="progress-header">
+                <h2>Analyzing Dataset...</h2>
+                <p>Please wait while DataLens profiles and processes your data.</p>
+            </div>
+            
+            <div class="progress-bar-container">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+
+            <div id="progress-steps" class="progress-steps">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Powered by <strong>DataLens Engine</strong> &bull; Version 1.0</p>
+        </footer>
+    </div>
+
+    <!-- Script File -->
+    <script src="{{ url_for('static', path='/js/index.js') }}?v=1.3"></script>
+</body>
+</html>

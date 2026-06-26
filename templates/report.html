@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataLens</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/report.css') }}?v=1.3">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- ================= SIDEBAR NAVIGATION ================= -->
+        <aside class="sidebar">
+            <div class="sidebar-header" style="flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 30px;">
+                <img src="{{ url_for('static', path='/logo.png') }}" alt="DataLens Logo" style="width: 45px; height: 45px; border-radius: var(--radius-sm); object-fit: contain;">
+                <span class="sidebar-brand" style="font-size: 1.4rem;">DataLens</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="active"><span class="sidebar-icon">📋</span> Overview</a>
+                <a href="#columns"><span class="sidebar-icon">📑</span> Column Details</a>
+                <a href="#statistics"><span class="sidebar-icon">📊</span> Stats Summary</a>
+                {% if quality %}
+                <a href="#quality"><span class="sidebar-icon">🔍</span> Data Quality</a>
+                {% endif %}
+                {% if feature_engineering %}
+                <a href="#feature-engineering"><span class="sidebar-icon">🛠️</span> Preprocessing</a>
+                {% endif %}
+                {% if visualizations %}
+                <a href="#visualizations"><span class="sidebar-icon">🎨</span> Visualizations</a>
+                {% endif %}
+                <a href="#insights"><span class="sidebar-icon">💡</span> AI Insights</a>
+            </nav>
+            <div class="theme-switch-wrapper">
+                <span class="theme-switch-label">Dark Mode</span>
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider-round"></span>
+                </label>
+            </div>
+        </aside>
+
+        <!-- ================= MAIN CONTENT PANEL ================= -->
+        <main class="main-content">
+            <header class="content-header">
+                <div>
+                    <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px;">Data Analysis Report</h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Automated exploratory analysis of dataset: <strong>{{ profiling.dataset_info.filename }}</strong></p>
+                </div>
+                <a href="/" class="btn-primary" style="margin-top: 0; padding: 10px 18px; width: auto; font-size: 0.9rem;">Upload New File</a>
+            </header>
+
+            <!-- ================= OVERVIEW SECTION ================= -->
+            <section id="overview" class="report-section">
+                <h2>Dataset Overview</h2>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>Filename</h3>
+                        <div class="card-value" style="font-size: 1.3rem; word-break: break-all;">{{ profiling.dataset_info.filename }}</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>Total Rows</h3>
+                        <div class="card-value">{{ profiling.dataset_info.rows }}</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>Total Columns</h3>
+                        <div class="card-value">{{ profiling.dataset_info.cols }}</div>
+                    </div>
+                    <div class="overview-card">
+                        <h3>Duplicate Rows</h3>
+                        <div class="card-value" style="color: {{ 'var(--danger-text)' if profiling.dataset_info.duplicate_values > 0 else 'inherit' }}">{{ profiling.dataset_info.duplicate_values }}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= COLUMN DETAILS SECTION ================= -->
+            <section id="columns" class="report-section">
+                <h2>Column Information</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column Name</th>
+                                <th>Data Type</th>
+                                <th>Missing Values</th>
+                                <th>Missing %</th>
+                                <th>Unique Values</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for column in profiling.columns %}
+                            <tr>
+                                <td style="font-weight: 600; color: var(--text-primary);">{{ column.col_name }}</td>
+                                <td><code style="font-family: monospace; padding: 2px 6px; background: var(--bg-primary); border-radius: 4px; font-size: 0.85rem;">{{ column.dtype }}</code></td>
+                                <td>{{ column.missing_values }}</td>
+                                <td>
+                                    {% if column.missing_percent >= 50 %}
+                                    <span class="badge danger">{{ column.missing_percent }}%</span>
+                                    {% elif column.missing_percent >= 10 %}
+                                    <span class="badge warning">{{ column.missing_percent }}%</span>
+                                    {% else %}
+                                    <span class="badge success">{{ column.missing_percent }}%</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ column.unique_values }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ================= STATISTICAL SUMMARY ================= -->
+            <section id="statistics" class="report-section">
+                <h2>Statistical Summary (Numerical Columns)</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Mean</th>
+                                <th>Median</th>
+                                <th>Std Dev</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in profiling.statistical_summary %}
+                            <tr>
+                                <td style="font-weight: 600; color: var(--text-primary);">{{ stat.column }}</td>
+                                <td>{{ "%.2f"|format(stat.mean) }}</td>
+                                <td>{{ "%.2f"|format(stat.median) }}</td>
+                                <td>{{ "%.2f"|format(stat.std) }}</td>
+                                <td>{{ stat.min }}</td>
+                                <td>{{ stat.max }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ================= DATA QUALITY ANALYSIS ================= -->
+            {% if quality %}
+            <section id="quality" class="report-section">
+                <h2>Data Quality Analysis</h2>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                    <!-- Missing Values Card -->
+                    <div class="overview-card" style="padding: 20px; min-height: auto;">
+                        <h3 style="margin-bottom: 15px; font-weight: 600;">⚠️ Columns with Missing Data</h3>
+                        {% if quality.missing_values %}
+                        <div class="table-wrapper" style="margin-top: 0; border: none;">
+                            <table style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 8px 10px;">Column</th>
+                                        <th style="padding: 8px 10px;">Missing Count</th>
+                                        <th style="padding: 8px 10px;">Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for col, val in quality.missing_values.items() %}
+                                    <tr>
+                                        <td style="padding: 8px 10px; font-weight: 500;">{{ col }}</td>
+                                        <td style="padding: 8px 10px;">{{ val.count }}</td>
+                                        <td style="padding: 8px 10px;"><span class="badge {{ 'danger' if val.percentage >= 40 else 'warning' }}" style="padding: 2px 8px; font-size: 0.75rem;">{{ val.percentage }}%</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p style="color: var(--success-text); font-weight: 500; font-size: 0.9rem;">✨ Excellent! No missing values detected in the entire dataset.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Outliers Card -->
+                    <div class="overview-card" style="padding: 20px; min-height: auto;">
+                        <h3 style="margin-bottom: 15px; font-weight: 600;">📊 Outliers Detected (IQR Method)</h3>
+                        {% if quality.outlier_detection %}
+                        <div class="table-wrapper" style="margin-top: 0; border: none;">
+                            <table style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 8px 10px;">Column</th>
+                                        <th style="padding: 8px 10px;">Outliers Count</th>
+                                        <th style="padding: 8px 10px;">Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for col, val in quality.outlier_detection.items() %}
+                                    <tr>
+                                        <td style="padding: 8px 10px; font-weight: 500;">{{ col }}</td>
+                                        <td style="padding: 8px 10px;">{{ val.count }}</td>
+                                        <td style="padding: 8px 10px;"><span class="badge {{ 'warning' if val.percent >= 5 else 'success' }}" style="padding: 2px 8px; font-size: 0.75rem;">{{ val.percent }}%</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p style="color: var(--success-text); font-weight: 500; font-size: 0.9rem;">✨ No outliers detected in your numerical columns.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Constant & High Cardinality Alerts -->
+                {% if quality.constant_columns %}
+                <div class="insight-card danger-insight" style="margin-bottom: 15px; border-radius: var(--radius-md);">
+                    <div class="insight-icon-box">❌</div>
+                    <div class="insight-content">
+                        <strong style="display: block; margin-bottom: 4px; color: var(--danger-text);">Constant Columns Detected</strong>
+                        <p style="font-size: 0.9rem;">The following columns contain only a single unique value and should be dropped as they provide zero statistical variance: <code style="background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-family: monospace;">{{ quality.constant_columns | join(', ') }}</code></p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if quality.high_cardinality %}
+                <div class="insight-card warning-insight" style="border-radius: var(--radius-md);">
+                    <div class="insight-icon-box">⚠️</div>
+                    <div class="insight-content">
+                        <strong style="display: block; margin-bottom: 4px; color: var(--warning-text);">High Cardinality Warning</strong>
+                        <p style="font-size: 0.9rem; margin-bottom: 8px;">The following columns contain highly unique values (e.g., IDs, codes, names) which may not be suitable for direct categorical encoding:</p>
+                        <ul style="font-size: 0.85rem; padding-left: 20px; color: var(--text-secondary);">
+                            {% for col, count in quality.high_cardinality.items() %}
+                            <li><strong>{{ col }}</strong>: {{ count }} unique categories</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </section>
+            {% endif %}
+
+            <!-- ================= FEATURE ENGINEERING RECOMMENDATIONS ================= -->
+            {% if feature_engineering %}
+            <section id="feature-engineering" class="report-section">
+                <h2>Feature Engineering Recommendations</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.95rem;">Preprocessing suggestions to optimize your dataset features before feeding them into machine learning models.</p>
+
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="openTab(event, 'missing')">🩹 Missing Values</button>
+                    <button class="tab-btn" onclick="openTab(event, 'encoding')">🏷️ Categorical Encoding</button>
+                    <button class="tab-btn" onclick="openTab(event, 'scaling')">📏 Feature Scaling</button>
+                    <button class="tab-btn" onclick="openTab(event, 'transform')">🔄 Transformations</button>
+                </div>
+
+                <!-- Missing Values Tab Content -->
+                <div id="missing" class="tab-content active">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature Column</th>
+                                    <th>Data-driven Recommendation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if feature_engineering.missing_value_strategy %}
+                                    {% for col, value in feature_engineering.missing_value_strategy.items() %}
+                                    <tr>
+                                        <td style="font-weight: 600; color: var(--text-primary);">{{ col }}</td>
+                                        <td>{{ value.recommendation }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; color: var(--success-text); font-weight: 500;">No missing value preprocessing needed!</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Encoding Tab Content -->
+                <div id="encoding" class="tab-content">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature Column</th>
+                                    <th>Recommended Encoding Technique</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if feature_engineering.encoding %}
+                                    {% for col, value in feature_engineering.encoding.items() %}
+                                    <tr>
+                                        <td style="font-weight: 600; color: var(--text-primary);">{{ col }}</td>
+                                        <td>{{ value.recommendation }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; color: var(--text-muted);">No categorical features found to encode.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Scaling Tab Content -->
+                <div id="scaling" class="tab-content">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature Column</th>
+                                    <th>Recommended Scaling Algorithm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if feature_engineering.scaling %}
+                                    {% for col, value in feature_engineering.scaling.items() %}
+                                    <tr>
+                                        <td style="font-weight: 600; color: var(--text-primary);">{{ col }}</td>
+                                        <td>{{ value.recommendation }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; color: var(--text-muted);">No numerical features found to scale.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Transformations Tab Content -->
+                <div id="transform" class="tab-content">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature Column</th>
+                                    <th>Recommended Power Transformation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if feature_engineering.transformations %}
+                                    {% for col, value in feature_engineering.transformations.items() %}
+                                    <tr>
+                                        <td style="font-weight: 600; color: var(--text-primary);">{{ col }}</td>
+                                        <td>{{ value.recommendation }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; color: var(--success-text); font-weight: 500;">No skewness transformations suggested (data looks symmetric!).</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- ================= VISUALIZATIONS SECTION ================= -->
+            {% if visualizations %}
+            <section id="visualizations" class="report-section">
+                <div class="viz-header">
+                    <h2>Interactive Visualizations</h2>
+                    <div class="viz-tabs">
+                        <button class="viz-tab-btn active" data-target="viz-overview">📂 General & Missing</button>
+                        <button class="viz-tab-btn" data-target="viz-numerical">📈 Numerical Distributions</button>
+                        <button class="viz-tab-btn" data-target="viz-categorical">📊 Categorical Summary</button>
+                        {% if visualizations.target %}
+                        <button class="viz-tab-btn" data-target="viz-target">🎯 Target Relationships</button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- General & Missing Plots Panel -->
+                <div id="viz-overview" class="viz-tab-panel active">
+                    <div style="display: flex; flex-direction: column; gap: 30px;">
+                        {% if visualizations.numerical.heatmap %}
+                        <div class="single-plot-card">
+                            <h3>🔥 Correlation Heatmap</h3>
+                            <img src="/static/{{ visualizations.numerical.heatmap }}" alt="Correlation Heatmap">
+                        </div>
+                        {% endif %}
+
+                        {% if visualizations.dataset.missing_values %}
+                        <div class="single-plot-card">
+                            <h3>📂 Missing Values Heatmap</h3>
+                            <img src="/static/{{ visualizations.dataset.missing_values }}" alt="Missing Values">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Numerical Distributions (Histograms & Boxplots) Panel -->
+                <div id="viz-numerical" class="viz-tab-panel">
+                    <div style="display: flex; flex-direction: column; gap: 40px;">
+                        <!-- Histograms Carousel -->
+                        {% if visualizations.numerical.histograms %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">📈 Feature Histograms</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.numerical.histograms %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('hist_', '') | replace('.png', '') }} Distribution</h4>
+                                                <img src="/static/{{ img }}" alt="Histogram">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Boxplots Carousel -->
+                        {% if visualizations.numerical.boxplots %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">📦 Outlier Boxplots</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.numerical.boxplots %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('box_', '') | replace('.png', '') }} Outliers</h4>
+                                                <img src="/static/{{ img }}" alt="Boxplot">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Categorical Summary (Countplots & Piecharts) Panel -->
+                <div id="viz-categorical" class="viz-tab-panel">
+                    <div style="display: flex; flex-direction: column; gap: 40px;">
+                        <!-- Countplots Carousel -->
+                        {% if visualizations.categorical.countplots %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">📊 Value Count Distributions</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.categorical.countplots %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('count_', '') | replace('.png', '') }} Frequencies</h4>
+                                                <img src="/static/{{ img }}" alt="Countplot">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Piecharts Carousel -->
+                        {% if visualizations.categorical.piecharts %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">🍕 Categorical Shares</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.categorical.piecharts %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('pie_', '') | replace('.png', '') }} Percentage Share</h4>
+                                                <img src="/static/{{ img }}" alt="Piechart">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Target Relationships Panel -->
+                {% if visualizations.target %}
+                <div id="viz-target" class="viz-tab-panel">
+                    <div style="display: flex; flex-direction: column; gap: 40px;">
+                        <!-- Target Distribution -->
+                        {% if visualizations.target.distribution %}
+                        <div class="single-plot-card">
+                            <h3>🎯 Target Variable Distribution</h3>
+                            <img src="/static/{{ visualizations.target.distribution }}" alt="Target Distribution">
+                        </div>
+                        {% endif %}
+
+                        <!-- Target Numeric Relationships Carousel -->
+                        {% if visualizations.target.numeric_relationships %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">🔗 Relationships with Numerical Features</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.target.numeric_relationships %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('_vs_', ' vs ') | replace('.png', '') }}</h4>
+                                                <img src="/static/{{ img }}" alt="Numerical Target Relationship">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Target Categorical Relationships Carousel -->
+                        {% if visualizations.target.categorical_relationships %}
+                        <div>
+                            <h3 style="margin-bottom: 15px; font-size: 1.25rem;">🔗 Relationships with Categorical Features</h3>
+                            <div class="carousel-container-wrapper">
+                                <div class="carousel-main-row">
+                                    <button class="carousel-btn prev">&#10094;</button>
+                                    <div class="carousel-track-wrapper">
+                                        <div class="carousel-track">
+                                            {% for img in visualizations.target.categorical_relationships %}
+                                            <div class="carousel-slide">
+                                                <h4>{{ img.split('/')[-1].split('\\')[-1] | replace('_vs_', ' vs ') | replace('.png', '') }}</h4>
+                                                <img src="/static/{{ img }}" alt="Categorical Target Relationship">
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <button class="carousel-btn next">&#10095;</button>
+                                </div>
+                                <div class="carousel-dots"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </section>
+            {% endif %}
+
+            <!-- ================= AI INSIGHTS SECTION ================= -->
+            <section id="insights" class="report-section">
+                <h2>AI Engine Insights</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 25px; font-size: 0.95rem;">Anomalies, statistical patterns, and metadata concerns flagged automatically in your dataset.</p>
+
+                {% if statistics and statistics.insights %}
+                <div class="insights-list">
+                    {% for insight in statistics.insights %}
+                        {% set class_name = "info-insight" %}
+                        {% set icon = "💡" %}
+
+                        {% if "skewed" in insight or "outliers" in insight or "missing values" in insight or "imbalance" in insight %}
+                            {% set class_name = "warning-insight" %}
+                            {% set icon = "⚠️" %}
+                        {% elif "redundant" in insight or "removal" in insight or "constant" in insight %}
+                            {% set class_name = "danger-insight" %}
+                            {% set icon = "❌" %}
+                        {% endif %}
+
+                        <div class="insight-card {{ class_name }}">
+                            <div class="insight-icon-box">{{ icon }}</div>
+                            <div class="insight-content">
+                                <p>{{ insight }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="insight-card info-insight">
+                    <div class="insight-icon-box">✨</div>
+                    <div class="insight-content">
+                        <p>No major statistical anomalies or concerns were flagged in the dataset profile. The features show healthy distributions!</p>
+                    </div>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- ================= FOOTER ================= -->
+            <footer>
+                <p>Report Generated by <strong>DataLens</strong> &bull; Version 1.0</p>
+                <p style="font-size: 0.75rem; margin-top: 5px; color: var(--text-muted);">&copy; 2026 DataLens. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- External Javascript -->
+    <script src="{{ url_for('static', path='/js/report.js') }}?v=1.3"></script>
+</body>
+</html>
