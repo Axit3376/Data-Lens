@@ -8,6 +8,7 @@ from routers.quality_router import router as quality_router
 from routers.profiling_router import router as profiling_router
 from routers.visualization_router import router as visualization_router
 from routers.report_router import router as report_router
+from routers.cleaning_router import router as cleaning_router
 
 app = FastAPI()
 app.mount("/static/plots", StaticFiles(directory="plots"), name="static-plots")
@@ -21,6 +22,7 @@ app.include_router(statistics_router)
 app.include_router(feature_engineering_router)
 app.include_router(visualization_router)
 app.include_router(report_router)
+app.include_router(cleaning_router)
 
 @app.get("/")
 async def home(request: Request):

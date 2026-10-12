@@ -1,0 +1,625 @@
+{
+    "session_id": "default_session",
+    "filename": "train.csv",
+    "current_version": 2,
+    "max_version": 2,
+    "history": [
+        {
+            "version": 0,
+            "operation_id": "initial_upload",
+            "operations": [],
+            "timestamp": "2026-10-12T16:43:44.690629",
+            "summary": "Uploaded original dataset: train.csv"
+        },
+        {
+            "version": 1,
+            "timestamp": "2026-10-12T16:45:39.219349",
+            "operation_id": "6f8e8b44",
+            "operations": [
+                {
+                    "action": "impute_median",
+                    "column": "Age",
+                    "parameters": {
+                        "strategy": "median",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "impute_mode",
+                    "column": "Cabin",
+                    "parameters": {
+                        "strategy": "mode",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "impute_mode",
+                    "column": "Embarked",
+                    "parameters": {
+                        "strategy": "mode",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "Age",
+                    "parameters": {
+                        "lower_bound": -6.6875,
+                        "upper_bound": 64.8125,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "SibSp",
+                    "parameters": {
+                        "lower_bound": -1.5,
+                        "upper_bound": 2.5,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "Fare",
+                    "parameters": {
+                        "lower_bound": -26.724,
+                        "upper_bound": 65.6344,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "trim_whitespace",
+                    "column": "Name",
+                    "parameters": {
+                        "strip": true
+                    }
+                }
+            ],
+            "summary": [
+                "Imputed 177 missing values in 'Age' with median (28.0)",
+                "Imputed 687 missing values in 'Cabin' with mode ('B96 B98')",
+                "Imputed 2 missing values in 'Embarked' with mode ('S')",
+                "Capped 11 outliers in 'Age' to range [-6.6875, 64.8125]",
+                "Capped 46 outliers in 'SibSp' to range [-1.5, 2.5]",
+                "Capped 116 outliers in 'Fare' to range [-26.724, 65.6344]",
+                "Trimmed whitespace in 2 cells in 'Name'"
+            ]
+        },
+        {
+            "version": 2,
+            "timestamp": "2026-10-12T16:45:52.392981",
+            "operation_id": "d91ed3cd",
+            "operations": [
+                {
+                    "action": "cap_outliers",
+                    "column": "Age",
+                    "parameters": {
+                        "lower_bound": 2.5,
+                        "upper_bound": 54.5,
+                        "method": "iqr"
+                    }
+                }
+            ],
+            "summary": [
+                "Capped 66 outliers in 'Age' to range [2.5, 54.5]"
+            ]
+        }
+    ],
+    "previews": {
+        "c0afd160": {
+            "preview_id": "c0afd160",
+            "base_version": 0,
+            "operations": [
+                {
+                    "action": "impute_median",
+                    "column": "Age",
+                    "parameters": {
+                        "strategy": "median",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "impute_mode",
+                    "column": "Cabin",
+                    "parameters": {
+                        "strategy": "mode",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "impute_mode",
+                    "column": "Embarked",
+                    "parameters": {
+                        "strategy": "mode",
+                        "fill_value": null
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "Age",
+                    "parameters": {
+                        "lower_bound": -6.6875,
+                        "upper_bound": 64.8125,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "SibSp",
+                    "parameters": {
+                        "lower_bound": -1.5,
+                        "upper_bound": 2.5,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "cap_outliers",
+                    "column": "Fare",
+                    "parameters": {
+                        "lower_bound": -26.724,
+                        "upper_bound": 65.6344,
+                        "method": "iqr"
+                    }
+                },
+                {
+                    "action": "trim_whitespace",
+                    "column": "Name",
+                    "parameters": {
+                        "strip": true
+                    }
+                }
+            ],
+            "summary": {
+                "initial_rows": 891,
+                "final_rows": 891,
+                "rows_removed": 0,
+                "initial_cols": 12,
+                "final_cols": 12,
+                "initial_missing": 866,
+                "final_missing": 0,
+                "initial_duplicates": 0,
+                "final_duplicates": 0,
+                "changed_cells": 1041,
+                "operations_executed": [
+                    "Imputed 177 missing values in 'Age' with median (28.0)",
+                    "Imputed 687 missing values in 'Cabin' with mode ('B96 B98')",
+                    "Imputed 2 missing values in 'Embarked' with mode ('S')",
+                    "Capped 11 outliers in 'Age' to range [-6.6875, 64.8125]",
+                    "Capped 46 outliers in 'SibSp' to range [-1.5, 2.5]",
+                    "Capped 116 outliers in 'Fare' to range [-26.724, 65.6344]",
+                    "Trimmed whitespace in 2 cells in 'Name'"
+                ],
+                "skipped_operations": [],
+                "representative_samples": [
+                    {
+                        "column": "Age",
+                        "change_type": "imputation",
+                        "indices": [
+                            5,
+                            17,
+                            19,
+                            26,
+                            28
+                        ],
+                        "original_val": "NaN",
+                        "new_val": 28.0,
+                        "count": 177
+                    },
+                    {
+                        "column": "Cabin",
+                        "change_type": "imputation",
+                        "indices": [
+                            0,
+                            2,
+                            4,
+                            5,
+                            7
+                        ],
+                        "original_val": "NaN",
+                        "new_val": "B96 B98",
+                        "count": 687
+                    },
+                    {
+                        "column": "Embarked",
+                        "change_type": "imputation",
+                        "indices": [
+                            61,
+                            829
+                        ],
+                        "original_val": "NaN",
+                        "new_val": "S",
+                        "count": 2
+                    },
+                    {
+                        "column": "Age",
+                        "change_type": "clipping",
+                        "count": 11,
+                        "bounds": [
+                            -6.6875,
+                            64.8125
+                        ]
+                    },
+                    {
+                        "column": "SibSp",
+                        "change_type": "clipping",
+                        "count": 46,
+                        "bounds": [
+                            -1.5,
+                            2.5
+                        ]
+                    },
+                    {
+                        "column": "Fare",
+                        "change_type": "clipping",
+                        "count": 116,
+                        "bounds": [
+                            -26.724,
+                            65.6344
+                        ]
+                    },
+                    {
+                        "column": "Name",
+                        "change_type": "whitespace_trimmed",
+                        "count": 2
+                    }
+                ]
+            },
+            "score_before": {
+                "overall_score": 96.51,
+                "rating": "Excellent",
+                "rating_color": "var(--success-text)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 91.9,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [
+                            "contains_missing_values"
+                        ],
+                        "affected_cells": 866,
+                        "total_cells": 10692,
+                        "missing_per_column": {
+                            "Age": 177,
+                            "Cabin": 687,
+                            "Embarked": 2
+                        },
+                        "recommendations": [
+                            "Impute 177 (19.87%) missing values in numerical column 'Age' with median or mean.",
+                            "Impute 687 (77.1%) missing values in categorical column 'Cabin' with mode or 'Missing'.",
+                            "Impute 2 (0.22%) missing values in categorical column 'Embarked' with mode or 'Missing'."
+                        ]
+                    },
+                    "validity": {
+                        "score": 97.85,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [
+                            "invalid_numeric_values_in_Ticket"
+                        ],
+                        "affected_cells": 230,
+                        "recommendations": [
+                            "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                        ]
+                    },
+                    "uniqueness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [],
+                        "duplicate_rows": 0,
+                        "recommendations": []
+                    },
+                    "consistency": {
+                        "score": 99.95,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [
+                            "whitespace_in_Name"
+                        ],
+                        "affected_cells": 2,
+                        "recommendations": [
+                            "Column 'Name' has 2 values with leading/trailing whitespace. Normalize whitespace."
+                        ]
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "completeness",
+                        "message": "Impute 177 (19.87%) missing values in numerical column 'Age' with median or mean."
+                    },
+                    {
+                        "dimension": "completeness",
+                        "message": "Impute 687 (77.1%) missing values in categorical column 'Cabin' with mode or 'Missing'."
+                    },
+                    {
+                        "dimension": "completeness",
+                        "message": "Impute 2 (0.22%) missing values in categorical column 'Embarked' with mode or 'Missing'."
+                    },
+                    {
+                        "dimension": "validity",
+                        "message": "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                    },
+                    {
+                        "dimension": "consistency",
+                        "message": "Column 'Name' has 2 values with leading/trailing whitespace. Normalize whitespace."
+                    }
+                ]
+            },
+            "score_after": {
+                "overall_score": 99.36,
+                "rating": "Excellent",
+                "rating_color": "var(--success-text)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "total_cells": 10692,
+                        "missing_per_column": {},
+                        "recommendations": []
+                    },
+                    "validity": {
+                        "score": 97.85,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [
+                            "invalid_numeric_values_in_Ticket"
+                        ],
+                        "affected_cells": 230,
+                        "recommendations": [
+                            "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                        ]
+                    },
+                    "uniqueness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [],
+                        "duplicate_rows": 0,
+                        "recommendations": []
+                    },
+                    "consistency": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "recommendations": []
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "validity",
+                        "message": "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                    }
+                ]
+            }
+        },
+        "b2768aba": {
+            "preview_id": "b2768aba",
+            "base_version": 1,
+            "operations": [
+                {
+                    "action": "cap_outliers",
+                    "column": "Age",
+                    "parameters": {
+                        "lower_bound": 2.5,
+                        "upper_bound": 54.5,
+                        "method": "iqr"
+                    }
+                }
+            ],
+            "summary": {
+                "initial_rows": 891,
+                "final_rows": 891,
+                "rows_removed": 0,
+                "initial_cols": 12,
+                "final_cols": 12,
+                "initial_missing": 0,
+                "final_missing": 0,
+                "initial_duplicates": 0,
+                "final_duplicates": 0,
+                "changed_cells": 66,
+                "operations_executed": [
+                    "Capped 66 outliers in 'Age' to range [2.5, 54.5]"
+                ],
+                "skipped_operations": [],
+                "representative_samples": [
+                    {
+                        "column": "Age",
+                        "change_type": "clipping",
+                        "count": 66,
+                        "bounds": [
+                            2.5,
+                            54.5
+                        ]
+                    }
+                ]
+            },
+            "score_before": {
+                "overall_score": 99.36,
+                "rating": "Excellent",
+                "rating_color": "var(--success-text)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "total_cells": 10692,
+                        "missing_per_column": {},
+                        "recommendations": []
+                    },
+                    "validity": {
+                        "score": 97.85,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [
+                            "invalid_numeric_values_in_Ticket"
+                        ],
+                        "affected_cells": 230,
+                        "recommendations": [
+                            "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                        ]
+                    },
+                    "uniqueness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [],
+                        "duplicate_rows": 0,
+                        "recommendations": []
+                    },
+                    "consistency": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "recommendations": []
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "validity",
+                        "message": "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                    }
+                ]
+            },
+            "score_after": {
+                "overall_score": 99.36,
+                "rating": "Excellent",
+                "rating_color": "var(--success-text)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "total_cells": 10692,
+                        "missing_per_column": {},
+                        "recommendations": []
+                    },
+                    "validity": {
+                        "score": 97.85,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [
+                            "invalid_numeric_values_in_Ticket"
+                        ],
+                        "affected_cells": 230,
+                        "recommendations": [
+                            "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                        ]
+                    },
+                    "uniqueness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [],
+                        "duplicate_rows": 0,
+                        "recommendations": []
+                    },
+                    "consistency": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "recommendations": []
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "validity",
+                        "message": "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                    }
+                ]
+            }
+        }
+    }
+}

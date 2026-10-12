@@ -1,4 +1,286 @@
 {
+    "quality_score": {
+        "overall_score": 99.36,
+        "rating": "Excellent",
+        "rating_color": "var(--success-text)",
+        "weights": {
+            "completeness": 0.35,
+            "validity": 0.3,
+            "uniqueness": 0.2,
+            "consistency": 0.15
+        },
+        "dimensions": {
+            "completeness": {
+                "score": 100.0,
+                "status": "available",
+                "reason": null,
+                "checks_performed": [
+                    "non_missing_cell_ratio"
+                ],
+                "checks_failed": [],
+                "affected_cells": 0,
+                "total_cells": 10692,
+                "missing_per_column": {},
+                "recommendations": []
+            },
+            "validity": {
+                "score": 97.85,
+                "status": "available",
+                "reason": null,
+                "checks_performed": [
+                    "type_convertibility",
+                    "infinite_values_check"
+                ],
+                "checks_failed": [
+                    "invalid_numeric_values_in_Ticket"
+                ],
+                "affected_cells": 230,
+                "recommendations": [
+                    "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+                ]
+            },
+            "uniqueness": {
+                "score": 100.0,
+                "status": "available",
+                "reason": null,
+                "checks_performed": [
+                    "exact_duplicate_rows"
+                ],
+                "checks_failed": [],
+                "duplicate_rows": 0,
+                "recommendations": []
+            },
+            "consistency": {
+                "score": 100.0,
+                "status": "available",
+                "reason": null,
+                "checks_performed": [
+                    "whitespace_inconsistency",
+                    "casing_inconsistency"
+                ],
+                "checks_failed": [],
+                "affected_cells": 0,
+                "recommendations": []
+            }
+        },
+        "key_recommendations": [
+            {
+                "dimension": "validity",
+                "message": "Column 'Ticket' has 230 values (25.8%) failing numeric format. Safe conversion or correction recommended."
+            }
+        ]
+    },
+    "cleaning_recommendations": [
+        {
+            "id": "rec_missing_Age",
+            "issue_type": "missing_values",
+            "column": "Age",
+            "severity": "medium",
+            "affected_count": 177,
+            "affected_percent": 19.87,
+            "proposed_action": "impute_median",
+            "rationale": "Numerical column 'Age' has 177 missing entries (19.87%). Median imputation preserves distribution without sensitivity to outliers.",
+            "parameters": {
+                "strategy": "median",
+                "fill_value": null
+            },
+            "warning": "Imputation substitutes synthetic estimates for absent observations.",
+            "allowed_actions": [
+                {
+                    "action": "impute_median",
+                    "label": "Impute with Median (Numerical)"
+                },
+                {
+                    "action": "impute_mean",
+                    "label": "Impute with Mean (Numerical)"
+                },
+                {
+                    "action": "drop_rows_missing",
+                    "label": "Drop Rows with Missing in this Column"
+                },
+                {
+                    "action": "drop_column",
+                    "label": "Drop Column"
+                }
+            ]
+        },
+        {
+            "id": "rec_missing_Cabin",
+            "issue_type": "missing_values",
+            "column": "Cabin",
+            "severity": "high",
+            "affected_count": 687,
+            "affected_percent": 77.1,
+            "proposed_action": "impute_mode",
+            "rationale": "Categorical column 'Cabin' has 687 missing entries (77.1%). Mode imputation fills with the most frequent value.",
+            "parameters": {
+                "strategy": "mode",
+                "fill_value": null
+            },
+            "warning": "Mode imputation may artificially inflate the prominence of the dominant category.",
+            "allowed_actions": [
+                {
+                    "action": "impute_mode",
+                    "label": "Impute with Mode (Most Frequent)"
+                },
+                {
+                    "action": "impute_constant",
+                    "label": "Replace with 'Missing' category"
+                },
+                {
+                    "action": "drop_rows_missing",
+                    "label": "Drop Rows with Missing in this Column"
+                },
+                {
+                    "action": "drop_column",
+                    "label": "Drop Column"
+                }
+            ]
+        },
+        {
+            "id": "rec_missing_Embarked",
+            "issue_type": "missing_values",
+            "column": "Embarked",
+            "severity": "low",
+            "affected_count": 2,
+            "affected_percent": 0.22,
+            "proposed_action": "impute_mode",
+            "rationale": "Categorical column 'Embarked' has 2 missing entries (0.22%). Mode imputation fills with the most frequent value.",
+            "parameters": {
+                "strategy": "mode",
+                "fill_value": null
+            },
+            "warning": "Mode imputation may artificially inflate the prominence of the dominant category.",
+            "allowed_actions": [
+                {
+                    "action": "impute_mode",
+                    "label": "Impute with Mode (Most Frequent)"
+                },
+                {
+                    "action": "impute_constant",
+                    "label": "Replace with 'Missing' category"
+                },
+                {
+                    "action": "drop_rows_missing",
+                    "label": "Drop Rows with Missing in this Column"
+                },
+                {
+                    "action": "drop_column",
+                    "label": "Drop Column"
+                }
+            ]
+        },
+        {
+            "id": "rec_outliers_Age",
+            "issue_type": "outliers",
+            "column": "Age",
+            "severity": "low",
+            "affected_count": 11,
+            "affected_percent": 1.23,
+            "proposed_action": "cap_outliers",
+            "rationale": "Column 'Age' has 11 values outside IQR bounds [-6.6875, 64.8125]. Capping preserves sample size without extreme skew.",
+            "parameters": {
+                "lower_bound": -6.6875,
+                "upper_bound": 64.8125,
+                "method": "iqr"
+            },
+            "warning": "Capping compresses extremes to the lower/upper thresholds.",
+            "allowed_actions": [
+                {
+                    "action": "cap_outliers",
+                    "label": "Cap Values to [-6.6875, 64.8125]"
+                },
+                {
+                    "action": "drop_outlier_rows",
+                    "label": "Drop 11 Outlier Rows"
+                },
+                {
+                    "action": "keep_outliers",
+                    "label": "Keep Outliers Unchanged"
+                }
+            ]
+        },
+        {
+            "id": "rec_outliers_SibSp",
+            "issue_type": "outliers",
+            "column": "SibSp",
+            "severity": "medium",
+            "affected_count": 46,
+            "affected_percent": 5.16,
+            "proposed_action": "cap_outliers",
+            "rationale": "Column 'SibSp' has 46 values outside IQR bounds [-1.5, 2.5]. Capping preserves sample size without extreme skew.",
+            "parameters": {
+                "lower_bound": -1.5,
+                "upper_bound": 2.5,
+                "method": "iqr"
+            },
+            "warning": "Capping compresses extremes to the lower/upper thresholds.",
+            "allowed_actions": [
+                {
+                    "action": "cap_outliers",
+                    "label": "Cap Values to [-1.5, 2.5]"
+                },
+                {
+                    "action": "drop_outlier_rows",
+                    "label": "Drop 46 Outlier Rows"
+                },
+                {
+                    "action": "keep_outliers",
+                    "label": "Keep Outliers Unchanged"
+                }
+            ]
+        },
+        {
+            "id": "rec_outliers_Fare",
+            "issue_type": "outliers",
+            "column": "Fare",
+            "severity": "medium",
+            "affected_count": 116,
+            "affected_percent": 13.02,
+            "proposed_action": "cap_outliers",
+            "rationale": "Column 'Fare' has 116 values outside IQR bounds [-26.724, 65.6344]. Capping preserves sample size without extreme skew.",
+            "parameters": {
+                "lower_bound": -26.724,
+                "upper_bound": 65.6344,
+                "method": "iqr"
+            },
+            "warning": "Capping compresses extremes to the lower/upper thresholds.",
+            "allowed_actions": [
+                {
+                    "action": "cap_outliers",
+                    "label": "Cap Values to [-26.724, 65.6344]"
+                },
+                {
+                    "action": "drop_outlier_rows",
+                    "label": "Drop 116 Outlier Rows"
+                },
+                {
+                    "action": "keep_outliers",
+                    "label": "Keep Outliers Unchanged"
+                }
+            ]
+        },
+        {
+            "id": "rec_whitespace_Name",
+            "issue_type": "whitespace",
+            "column": "Name",
+            "severity": "low",
+            "affected_count": 2,
+            "affected_percent": 0.22,
+            "proposed_action": "trim_whitespace",
+            "rationale": "Column 'Name' has 2 values with leading or trailing whitespace.",
+            "parameters": {
+                "strip": true
+            },
+            "warning": "None. Pure string cleanup.",
+            "allowed_actions": [
+                {
+                    "action": "trim_whitespace",
+                    "label": "Trim Leading and Trailing Whitespace"
+                }
+            ]
+        }
+    ],
     "profiling": {
         "dataset_info": {
             "filename": "train.csv",

@@ -1,0 +1,249 @@
+{
+    "session_id": "test_session_api",
+    "filename": "test.csv",
+    "current_version": 1,
+    "max_version": 1,
+    "history": [
+        {
+            "version": 0,
+            "operation_id": "initial_upload",
+            "operations": [],
+            "timestamp": "2026-10-12T16:43:00.497106",
+            "summary": "Uploaded original dataset: test.csv"
+        },
+        {
+            "version": 1,
+            "timestamp": "2026-10-12T16:43:00.712263",
+            "operation_id": "edc626c6",
+            "operations": [
+                {
+                    "action": "trim_whitespace",
+                    "column": "city",
+                    "parameters": {}
+                }
+            ],
+            "summary": [
+                "Trimmed whitespace in 2 cells in 'city'"
+            ]
+        }
+    ],
+    "previews": {
+        "46922f1a": {
+            "preview_id": "46922f1a",
+            "base_version": 0,
+            "operations": [
+                {
+                    "action": "remove_duplicates",
+                    "column": null,
+                    "parameters": {}
+                }
+            ],
+            "summary": {
+                "initial_rows": 5,
+                "final_rows": 4,
+                "rows_removed": 1,
+                "initial_cols": 4,
+                "final_cols": 4,
+                "initial_missing": 1,
+                "final_missing": 1,
+                "initial_duplicates": 1,
+                "final_duplicates": 0,
+                "changed_cells": 0,
+                "operations_executed": [
+                    "Removed 1 exact duplicate rows"
+                ],
+                "skipped_operations": [],
+                "representative_samples": [
+                    {
+                        "column": "ALL",
+                        "change_type": "row_removal",
+                        "count": 1,
+                        "description": "Removed 1 exact duplicate rows"
+                    }
+                ]
+            },
+            "score_before": {
+                "overall_score": 88.25,
+                "rating": "Good",
+                "rating_color": "var(--primary-color)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 95.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [
+                            "contains_missing_values"
+                        ],
+                        "affected_cells": 1,
+                        "total_cells": 20,
+                        "missing_per_column": {
+                            "age": 1
+                        },
+                        "recommendations": [
+                            "Impute 1 (20.0%) missing values in numerical column 'age' with median or mean."
+                        ]
+                    },
+                    "validity": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "recommendations": []
+                    },
+                    "uniqueness": {
+                        "score": 80.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [
+                            "has_exact_duplicate_rows"
+                        ],
+                        "duplicate_rows": 1,
+                        "recommendations": [
+                            "Remove 1 exact duplicate rows to avoid data redundancy."
+                        ]
+                    },
+                    "consistency": {
+                        "score": 60.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [
+                            "whitespace_in_city",
+                            "casing_inconsistency_in_city"
+                        ],
+                        "affected_cells": 4,
+                        "recommendations": [
+                            "Column 'city' has 2 values with leading/trailing whitespace. Normalize whitespace.",
+                            "Column 'city' has 2 values with inconsistent letter casing (e.g., Pune vs pune)."
+                        ]
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "completeness",
+                        "message": "Impute 1 (20.0%) missing values in numerical column 'age' with median or mean."
+                    },
+                    {
+                        "dimension": "uniqueness",
+                        "message": "Remove 1 exact duplicate rows to avoid data redundancy."
+                    },
+                    {
+                        "dimension": "consistency",
+                        "message": "Column 'city' has 2 values with leading/trailing whitespace. Normalize whitespace."
+                    },
+                    {
+                        "dimension": "consistency",
+                        "message": "Column 'city' has 2 values with inconsistent letter casing (e.g., Pune vs pune)."
+                    }
+                ]
+            },
+            "score_after": {
+                "overall_score": 92.19,
+                "rating": "Excellent",
+                "rating_color": "var(--success-text)",
+                "weights": {
+                    "completeness": 0.35,
+                    "validity": 0.3,
+                    "uniqueness": 0.2,
+                    "consistency": 0.15
+                },
+                "dimensions": {
+                    "completeness": {
+                        "score": 93.75,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "non_missing_cell_ratio"
+                        ],
+                        "checks_failed": [
+                            "contains_missing_values"
+                        ],
+                        "affected_cells": 1,
+                        "total_cells": 16,
+                        "missing_per_column": {
+                            "age": 1
+                        },
+                        "recommendations": [
+                            "Impute 1 (25.0%) missing values in numerical column 'age' with median or mean."
+                        ]
+                    },
+                    "validity": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "type_convertibility",
+                            "infinite_values_check"
+                        ],
+                        "checks_failed": [],
+                        "affected_cells": 0,
+                        "recommendations": []
+                    },
+                    "uniqueness": {
+                        "score": 100.0,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "exact_duplicate_rows"
+                        ],
+                        "checks_failed": [],
+                        "duplicate_rows": 0,
+                        "recommendations": []
+                    },
+                    "consistency": {
+                        "score": 62.5,
+                        "status": "available",
+                        "reason": null,
+                        "checks_performed": [
+                            "whitespace_inconsistency",
+                            "casing_inconsistency"
+                        ],
+                        "checks_failed": [
+                            "whitespace_in_city",
+                            "casing_inconsistency_in_city"
+                        ],
+                        "affected_cells": 3,
+                        "recommendations": [
+                            "Column 'city' has 1 values with leading/trailing whitespace. Normalize whitespace.",
+                            "Column 'city' has 2 values with inconsistent letter casing (e.g., Pune vs pune)."
+                        ]
+                    }
+                },
+                "key_recommendations": [
+                    {
+                        "dimension": "completeness",
+                        "message": "Impute 1 (25.0%) missing values in numerical column 'age' with median or mean."
+                    },
+                    {
+                        "dimension": "consistency",
+                        "message": "Column 'city' has 1 values with leading/trailing whitespace. Normalize whitespace."
+                    },
+                    {
+                        "dimension": "consistency",
+                        "message": "Column 'city' has 2 values with inconsistent letter casing (e.g., Pune vs pune)."
+                    }
+                ]
+            }
+        }
+    }
+}

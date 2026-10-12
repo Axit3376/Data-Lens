@@ -64,6 +64,7 @@ def get_high_cardinality_columns(df):
     return high_cardinality
 
 def analyze_quality(df):
+    from services.quality_score_service import compute_quality_score
     quality = {
         "missing_values": get_missing_values(df),
         "duplicate_rows": get_duplicate_rows(df),
@@ -72,5 +73,9 @@ def analyze_quality(df):
         "high_cardinality": get_high_cardinality_columns(df)
     }
     update_analysis("quality", quality)
+    
+    # Store quality score
+    quality_score = compute_quality_score(df)
+    update_analysis("quality_score", quality_score)
 
     return quality
