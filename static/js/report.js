@@ -240,12 +240,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyTbody = document.getElementById('cleaning-history-tbody');
 
     let currentSessionId = 'default_session';
-    let currentRecommendations = [];
+    let currentRecommendations = window.INITIAL_CLEANING_RECS || [];
     let activePreviewId = null;
 
     // Load Cleaning Analysis & Recommendations
     async function loadCleaningWorkspace() {
         if (!recsContainer) return;
+        
+        // If window has preloaded recommendations, keep them ready immediately
+        if (window.INITIAL_CLEANING_RECS && window.INITIAL_CLEANING_RECS.length > 0 && currentRecommendations.length === 0) {
+            currentRecommendations = window.INITIAL_CLEANING_RECS;
+        }
+
         try {
             const resp = await fetch(`/cleaning/analyze?session_id=${currentSessionId}`);
             if (resp.ok) {
@@ -257,12 +263,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             // If backend returned non-200, check if recommendations exist in window / server-rendered state
+            if (currentRecommendations.length > 0) {
+                renderRecommendations(currentRecommendations);
+                return;
+            }
             const renderedCards = recsContainer.querySelectorAll('.rec-item-card');
             if (renderedCards.length === 0) {
                 recsContainer.innerHTML = `<div style="padding: 20px; color: var(--text-muted);">Please upload a CSV dataset on the home page first to activate smart cleaning tools.</div>`;
             }
         } catch (err) {
             console.error("Error loading cleaning recommendations:", err);
+            if (currentRecommendations.length > 0) {
+                renderRecommendations(currentRecommendations);
+                return;
+            }
             const renderedCards = recsContainer.querySelectorAll('.rec-item-card');
             if (renderedCards.length === 0) {
                 recsContainer.innerHTML = `<div style="padding: 20px; color: var(--danger-text);">Failed to load recommendations: ${err.message}</div>`;
@@ -407,15 +421,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const chks = document.querySelectorAll('.rec-checkbox:checked');
         chks.forEach(chk => {
             const idx = parseInt(chk.getAttribute('data-idx'));
-            const rec = currentRecommendations[idx];
+            const rec = currentRecommendations && currentRecommendations[idx] ? currentRecommendations[idx] : null;
             const selectEl = document.querySelector(`.rec-action-select[data-idx="${idx}"]`);
-            const chosenAction = selectEl ? selectEl.value : rec.proposed_action;
-
-            operations.push({
-                action: chosenAction,
-                column: rec.column,
-                parameters: rec.parameters || {}
-            });
+            
+            if (rec) {
+                const chosenAction = selectEl ? selectEl.value : rec.proposed_action;
+                operations.push({
+                    action: chosenAction,
+                    column: rec.column,
+                    parameters: rec.parameters || {}
+                });
+            } else if (selectEl) {
+                // Fallback if cards were rendered server-side
+                operations.push({
+                    action: selectEl.value,
+                    column: null,
+                    parameters: {}
+                });
+            }
         });
         return operations;
     }
@@ -443,8 +466,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!resp.ok) {
-                    const err = await resp.json();
-                    throw new Error(err.detail || 'Preview generation failed.');
+                    let errDetail = `Server returned status ${resp.status}`;
+                    try {
+                        const err = await resp.json();
+                        if (err && err.detail) errDetail = err.detail;
+                    } catch (_) {}
+                    throw new Error(errDetail);
                 }
 
                 const data = await resp.json();
